@@ -16,6 +16,25 @@ public class GObject {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
+	public GObject(int x, int y, Image image) {
+		this.setOriginalImage(x, y, image);
+	}
+
+	public GObject(int x, int y, int width, int height, Image image) {
+		this.setScaleImage(x, y, width, height, image);
+	}
+
+	public void setOriginalImage(int x, int y, Image image) {
+		this.setScaleImage(x, y, image.getWidth(null), image.getHeight(null), image);
+	}
+
+	public void setScaleImage(int x, int y, int width, int height, Image image) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.image = image;
+	}
 
 	public int getX() {
 		return x;

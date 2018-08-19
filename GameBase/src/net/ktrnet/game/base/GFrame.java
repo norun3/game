@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 
 public class GFrame extends JFrame {
 
+	/** serialVersionUID */
+	private static final long serialVersionUID = 1L;
+
 	public GFrame() throws HeadlessException {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
