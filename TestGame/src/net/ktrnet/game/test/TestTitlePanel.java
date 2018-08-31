@@ -31,20 +31,14 @@ public class TestTitlePanel extends GPanel {
 	}
 
 	@Override
-	protected int preKeyProccess(GObjectManager gobjman) {
-
-		return super.preKeyProccess(gobjman);
-	}
-
-	@Override
-	protected int keyProccess(GObjectManager gobjman, KeyStateManager keyman) {
+	protected int procKey(GObjectManager gobjman, KeyStateManager keyman) {
 
 		int result = GPanel.RESULT_SUCCESS;
 
 		if (keyman.isPressed(KeyEvent.VK_ENTER)) {
 			System.out.println("press key enter.");
-			if (imgCharacter001 != null) {
-				GObject gobj = new GObject(10, 10, imgCharacter001);
+			if (imgCharacter001 != null && idxCharacter001 == -1) {
+				GObject gobj = new GObject(10, 10, 50, 50, imgCharacter001);
 				idxCharacter001 = gobjman.addGameObject(0, gobj);
 				System.out.println("be visible character001.");
 			}
@@ -95,18 +89,18 @@ public class TestTitlePanel extends GPanel {
 	}
 
 	@Override
-	protected int postKeyProccess(GObjectManager gobjman) {
+	protected int procMain(GObjectManager gobjman) {
 
-		return super.postKeyProccess(gobjman);
+		return super.procMain(gobjman);
 	}
 
 	@Override
-	protected void lastEndProccess(GObjectManager gobjman) {
+	protected void procNormalEnd(GObjectManager gobjman) {
 		System.out.println("lastEndProccess.");
 	}
 
 	@Override
-	protected void lastAbendProccess(GObjectManager gobjman) {
+	protected void procAbnormalEnd(GObjectManager gobjman) {
 		System.out.println("lastAbendProccess.");
 	}
 

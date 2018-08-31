@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -15,7 +19,7 @@ import net.ktrnet.game.base.object.GObject;
 import net.ktrnet.game.base.object.GObjectManager;
 import net.ktrnet.game.base.util.GameTime;
 
-public class GPanel extends JPanel implements Runnable, KeyListener {
+public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyListener, FocusListener {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1L;
@@ -53,6 +57,9 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 	/** ゲーム中のオブジェクトを管理する変数 */
 	private GObjectManager gobjman = null;
 
+	/** ゲームループのメインスレッド */
+	private Thread mainThread = null;
+
 	public GPanel() {
 		this.init();
 	}
@@ -82,12 +89,21 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 		this.gameStatus = -1;
 		this.keyman = new KeyStateManager();
 		this.gobjman = new GObjectManager();
+		// スレッド作成
+		this.mainThread = new Thread(this);
+
+		// キー入力受付登録
+		this.addKeyListener(this);
+		// 階層コンポーネント変更イベント受付登録
+		this.addHierarchyListener(this);
+
+		this.setFocusable(true);
 	}
 
 	@Override
 	public void run() {
 
-		this.gameStatus = GAME_STATE_STARTED;
+		System.out.println("run start");
 
 		// フレーム処理用変数：フレーム開始時間（ミリ秒）
 		long startTime = 0;
@@ -109,37 +125,42 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 
 			if (!processSkip) {
 
-				// 前処理
 				if (this.gameStatus == GAME_STATE_ACTIVE) {
-					result = preKeyProccess(this.gobjman);
-					// 処理結果＝成功　以外の場合、ループ終了
-					if (result != RESULT_SUCCESS) {
-						break;
-					}
-				}
 
-				// キー処理
-				if (this.gameStatus == GAME_STATE_ACTIVE || this.gameStatus == GAME_STATE_PAUSE) {
-					result = keyProccess(this.gobjman, this.keyman);
+					result = procKey(this.gobjman, this.keyman);
 					// 処理結果＝成功　以外の場合、ループ終了
 					if (result != RESULT_SUCCESS) {
+						this.gameStatus = GAME_STATE_ABEND;
 						break;
 					}
-				}
 
-				// 後処理
-				if (this.gameStatus == GAME_STATE_ACTIVE) {
-					result = postKeyProccess(this.gobjman);
+					result = procMain(this.gobjman);
 					// 処理結果＝成功　以外の場合、ループ終了
 					if (result != RESULT_SUCCESS) {
+						this.gameStatus = GAME_STATE_ABEND;
 						break;
 					}
+
+				} else if (this.gameStatus == GAME_STATE_PAUSE) {
+
+					result = procKeyPause(this.gobjman, this.keyman);
+					// 処理結果＝成功　以外の場合、ループ終了
+					if (result != RESULT_SUCCESS) {
+						this.gameStatus = GAME_STATE_ABEND;
+						break;
+					}
+
+					result = procMainPause(this.gobjman);
+					// 処理結果＝成功　以外の場合、ループ終了
+					if (result != RESULT_SUCCESS) {
+						this.gameStatus = GAME_STATE_ABEND;
+						break;
+					}
+
 				}
 
 				// 描画更新
-				if (this.gameStatus == GAME_STATE_ACTIVE || this.gameStatus == GAME_STATE_PAUSE) {
-					this.repaint();
-				}
+				this.repaint();
 			}
 
 			// フレーム調整
@@ -149,7 +170,8 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 				try {
 					Thread.sleep(sleepTime);
 				} catch (InterruptedException e) {
-					throw new GameRuntimeException(e);
+					this.gameStatus = GAME_STATE_ABEND;
+					break;
 				}
 				processSkip = false;
 			} else {
@@ -162,14 +184,16 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 		// 最終処理
 		switch(this.gameStatus) {
 		case GAME_STATE_END:
-			lastEndProccess(gobjman);
+			procNormalEnd(gobjman);
 			break;
 		case GAME_STATE_ABEND:
-			lastAbendProccess(gobjman);
+			procAbnormalEnd(gobjman);
 			break;
 		default:
 			throw new GameRuntimeException("ステータスが異常です(" + this.gameStatus + ")");
 		}
+
+		System.out.println("run end");
 	}
 
 	/**
@@ -184,20 +208,6 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	/**
-	 * キー処理前処理
-	 * <p>
-	 * ゲームループにて、キー処理前に呼び出されるメソッド<br>
-	 * 子クラスにて実装する
-	 * </p>
-	 * @param gobjman ゲームオブジェクト管理クラス
-	 * @return ゲーム状態
-	 */
-	protected int preKeyProccess(GObjectManager gobjman) {
-		// 子クラスで実装
-		return RESULT_SUCCESS;
-	}
-
-	/**
 	 * キー処理
 	 * <p>
 	 * ゲームループにて、キー処理を行うメソッド<br>
@@ -207,13 +217,29 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 	 * @param keyman キー状態管理クラス
 	 * @return ゲーム状態
 	 */
-	protected int keyProccess(GObjectManager gobjman, KeyStateManager keyman) {
+	protected int procKey(GObjectManager gobjman, KeyStateManager keyman) {
 		// 子クラスで実装
 		return RESULT_SUCCESS;
 	}
 
 	/**
-	 * キー処理後処理
+	 * キー処理（Pause時）
+	 * <p>
+	 * ゲームループにて、PAUSE中のキー処理を行うメソッド<br>
+	 * デフォルトでは通常のキー処理を行う<br>
+	 * 子クラスにて実装する
+	 * </p>
+	 * @param gobjman ゲームオブジェクト管理クラス
+	 * @param keyman キー状態管理クラス
+	 * @return ゲーム状態
+	 */
+	protected int procKeyPause(GObjectManager gobjman, KeyStateManager keyman) {
+		// 子クラスで実装
+		return procKey(gobjman, keyman);
+	}
+
+	/**
+	 * メイン処理
 	 * <p>
 	 * ゲームループにて、キー処理後に呼び出されるメソッド<br>
 	 * 子クラスにて実装する
@@ -221,10 +247,54 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 	 * @param gobjman ゲームオブジェクト管理クラス
 	 * @return ゲーム状態
 	 */
-	protected int postKeyProccess(GObjectManager gobjman) {
+	protected int procMain(GObjectManager gobjman) {
 		// 子クラスで実装
 		return RESULT_SUCCESS;
 	}
+
+	/**
+	 * メイン処理（Pause時）
+	 * <p>
+	 * ゲームループにて、PAUSE中のメイン処理を行うメソッド<br>
+	 * デフォルトでは通常のメイン処理を行う<br>
+	 * 子クラスにて実装する
+	 * </p>
+	 * @param gobjman ゲームオブジェクト管理クラス
+	 * @return ゲーム状態
+	 */
+	protected int procMainPause(GObjectManager gobjman) {
+		// 子クラスで実装
+		return procMain(gobjman);
+	}
+
+	/**
+	 * PAUSE発生時処理
+	 * <p>
+	 * pauseGame()呼び出し時に呼び出されるメソッド<br>
+	 * 子クラスにて実装する
+	 * </p>
+	 * @param gobjman ゲームオブジェクト管理クラス
+	 * @return ゲーム状態
+	 */
+	protected int procPauseStart(GObjectManager gobjman) {
+		// 子クラスで実装
+		return RESULT_SUCCESS;
+	}
+
+	/**
+	 * PAUSE終了時処理
+	 * <p>
+	 * resumeGame()呼び出し時に呼び出されるメソッド<br>
+	 * 子クラスにて実装する
+	 * </p>
+	 * @param gobjman ゲームオブジェクト管理クラス
+	 * @return ゲーム状態
+	 */
+	protected int procPauseEnd(GObjectManager gobjman) {
+		// 子クラスで実装
+		return RESULT_SUCCESS;
+	}
+
 
 	/**
 	 * 正常時最終処理
@@ -234,7 +304,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 	 * </p>
 	 * @param gobjman ゲームオブジェクト管理クラス
 	 */
-	protected void lastEndProccess(GObjectManager gobjman) {
+	protected void procNormalEnd(GObjectManager gobjman) {
 		return;
 	}
 
@@ -246,7 +316,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 	 * </p>
 	 * @param gobjman ゲームオブジェクト管理クラス
 	 */
-	protected void lastAbendProccess(GObjectManager gobjman) {
+	protected void procAbnormalEnd(GObjectManager gobjman) {
 		return;
 	}
 
@@ -331,5 +401,99 @@ public class GPanel extends JPanel implements Runnable, KeyListener {
 		g2d.setColor(c);
 	}
 
+
+	/**
+	 * ゲーム開始
+	 * <p>
+	 * ゲームループを開始する
+	 * </p>
+	 */
+	public void startGame() {
+		if (!this.mainThread.isAlive()) {
+			this.mainThread.start();
+			this.gameStatus = GAME_STATE_STARTED;
+			this.setFocusable(true);
+		}
+	}
+
+	/**
+	 * ゲーム停止
+	 * <p>
+	 * ゲームループを停止する<br>
+	 * キー入力と描画は行う
+	 * </p>
+	 */
+	public void pauseGame() {
+		if (this.mainThread.isAlive()) {
+			if (this.gameStatus == GAME_STATE_ACTIVE) {
+				this.gameStatus = GAME_STATE_PAUSE;
+				procPauseStart(this.gobjman);
+			}
+		}
+	}
+
+	public void resumeGame() {
+		if (this.mainThread.isAlive()) {
+			if (this.gameStatus == GAME_STATE_PAUSE) {
+				this.gameStatus = GAME_STATE_ACTIVE;
+				procPauseEnd(this.gobjman);
+			}
+		}
+	}
+
+	/**
+	 * ゲーム終了
+	 * <p>
+	 * ゲームループを正常終了させる
+	 * </p>
+	 */
+	public void endGame() {
+		if (this.mainThread.isAlive()) {
+			this.gameStatus = GAME_STATE_END;
+		}
+	}
+
+	/**
+	 * ゲーム異常終了
+	 * <p>
+	 * ゲームループを異常終了させる
+	 * </p>
+	 */
+	public void abortGame() {
+		if (this.mainThread.isAlive()) {
+			this.mainThread.interrupt();
+		}
+	}
+
+	/**
+	 * 階層変更イベント
+	 * <p>
+	 * 親コンポーネントに変更があったときに通知されるイベント<br>
+	 * 親コンポーネント変更により自身が非表示担った場合に、<br>
+	 * 自身がもつスレッドを終了させる
+	 * </p>
+	 */
+	@Override
+	public void hierarchyChanged(HierarchyEvent e) {
+		//check for Hierarchy event
+		if(e.getChangeFlags() == HierarchyEvent.DISPLAYABILITY_CHANGED) {
+			//do the required action upon close
+			if(!this.isDisplayable()) {
+				if (this.mainThread.isAlive()) {
+					this.mainThread.interrupt();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		this.resumeGame();
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		this.pauseGame();
+	}
 
 }
