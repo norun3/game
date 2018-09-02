@@ -10,8 +10,6 @@ public class TestGameFrame extends GFrame implements WindowListener {
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1L;
 
-	private Thread mainThread = null;
-
 	private TestTitlePanel panel = null;
 
 	public TestGameFrame() {
@@ -20,8 +18,7 @@ public class TestGameFrame extends GFrame implements WindowListener {
 	}
 
 	public void startGame() {
-		mainThread = new Thread(this.panel);
-		mainThread.start();
+		this.panel.startGame();
 	}
 
 	@Override
@@ -33,9 +30,7 @@ public class TestGameFrame extends GFrame implements WindowListener {
 	@Override
 	public void windowClosed(WindowEvent e) {
 		System.out.println("window Closed.");
-		if (mainThread.isAlive()) {
-			mainThread.interrupt();
-		}
+		this.panel.abortGame();
 	}
 
 	@Override
