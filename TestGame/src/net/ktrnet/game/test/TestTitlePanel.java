@@ -2,7 +2,6 @@ package net.ktrnet.game.test;
 
 import java.awt.Image;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 import net.ktrnet.game.base.GPanel;
 import net.ktrnet.game.base.input.KeyStateManager;
@@ -15,33 +14,37 @@ public class TestTitlePanel extends GPanel {
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1L;
 
+	private ResourceUtil resourceUtil = null;
+
 	private Image imgCharacter001 = null;
 	private int idxCharacter001 = -1;
 
 	public TestTitlePanel() {
 		super();
-		imgCharacter001 = null;
-		try {
-			imgCharacter001 = ResourceUtil.loadImage("character001.png");
-			System.out.println("character001 image loads is success.");
-		} catch (IOException e) {
-			System.out.println("character001 image loads is failed.");
-			e.printStackTrace();
-		}
+		this.resourceUtil = new ResourceUtil();
+		imgCharacter001 = this.resourceUtil.getImage("jashinchan");
 	}
+
+
+
+	@Override
+	protected int procBefore(GObjectManager gobjman) {
+
+		GObject gobj = new GObject(10, 10, 0.1, imgCharacter001);
+		idxCharacter001 = gobjman.addGameObject(0, gobj);
+		System.out.println("be visible character001.");
+
+		return RESULT_SUCCESS;
+	}
+
 
 	@Override
 	protected int procKey(GObjectManager gobjman, KeyStateManager keyman) {
 
 		int result = GPanel.RESULT_SUCCESS;
 
-		if (keyman.isPressed(KeyEvent.VK_ENTER)) {
-			System.out.println("press key enter.");
-			if (imgCharacter001 != null && idxCharacter001 == -1) {
-				GObject gobj = new GObject(10, 10, 50, 50, imgCharacter001);
-				idxCharacter001 = gobjman.addGameObject(0, gobj);
-				System.out.println("be visible character001.");
-			}
+		if (keyman.isPressed(KeyEvent.VK_SPACE)) {
+
 		}
 
 		if (keyman.isPressed(KeyEvent.VK_RIGHT)) {

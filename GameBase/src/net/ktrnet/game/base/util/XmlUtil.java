@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,18 +24,55 @@ public class XmlUtil {
 		try {
 			Enumeration<URL> resources = XmlUtil.class.getClassLoader().getResources("");
 
+			URL retUrl = null;
 			while(resources.hasMoreElements()) {
 
 				URL url = resources.nextElement();
+				System.out.println(url.toString());
 
-				if (xmlFileName.equals(url.getFile())) {
-					return url;
+				File f = Paths.get(url.toURI()).toFile();
+
+				retUrl = null;
+				if (f.isFile() && f.getName().equals(xmlFileName)) {
+					retUrl = url;
+				} else if (f.isDirectory()) {
+					retUrl = findXml(f, xmlFileName);
 				}
 
+				if (retUrl != null) {
+					return retUrl;
+				}
 			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static URL findXml(File dir, String xmlFileName) throws MalformedURLException {
+
+		URL url = null;
+
+		for (File f : dir.listFiles()) {
+
+			System.out.println(f.toString());
+
+			url = null;
+			if (f.isFile() && f.getName().equals(xmlFileName)) {
+
+				url = f.toPath().toUri().toURL();
+
+			} else if (f.isDirectory()) {
+				url = findXml(f, xmlFileName);
+			}
+
+			if (url != null) {
+				return url;
+			}
 		}
 
 		return null;

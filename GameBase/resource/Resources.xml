@@ -3,9 +3,7 @@
 <resources>
 
 	<resource id="jashinchan">
-		./images/chr001_jashinchan.png
+		chr001_jashinchan.png
 	</resource>
-
-	<resource id="megami" path="./images/chr002_megami.png"/>
 
 </resources>

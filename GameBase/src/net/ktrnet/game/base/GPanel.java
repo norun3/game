@@ -116,6 +116,11 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 		// 処理結果
 		int result = -1;
 
+		result = procBefore(this.gobjman);
+		if (result != RESULT_SUCCESS) {
+			return;
+		}
+
 		// 初回フレーム処理用処理
 		startTime = GameTime.getSystemTime();;
 
@@ -205,6 +210,19 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 */
 	public void setFps(int fps) {
 		this.mspframe = (long)((double)MILLSEC / (double)fps);
+	}
+
+	/**
+	 * 前処理
+	 * <p>
+	 * ゲームループ前に実行されるメソッド<br>
+	 * </p>
+	 * @param gobjman ゲームオブジェクト管理クラス
+	 * @return ゲーム状態
+	 */
+	protected int procBefore(GObjectManager gobjman) {
+		// 子クラスで実装
+		return RESULT_SUCCESS;
 	}
 
 	/**

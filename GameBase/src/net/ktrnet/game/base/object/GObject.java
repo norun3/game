@@ -24,6 +24,17 @@ public class GObject {
 		this.setScaleImage(x, y, width, height, image);
 	}
 
+	public GObject(int x, int y, double scale, Image image) {
+
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
+
+		width *= scale;
+		height *= scale;
+
+		this.setScaleImage(x, y, width, height, image);
+	}
+
 	public void setOriginalImage(int x, int y, Image image) {
 		this.setScaleImage(x, y, image.getWidth(null), image.getHeight(null), image);
 	}
