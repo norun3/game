@@ -122,7 +122,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 		}
 
 		// 初回フレーム処理用処理
-		startTime = GameTime.getSystemTime();;
+		startTime = GameTime.getSystemTime();
 
 		// 処理ループ
 		this.gameStatus = GAME_STATE_ACTIVE;

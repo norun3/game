@@ -1,17 +1,35 @@
 package net.ktrnet.game.test;
 
 
+import java.awt.Image;
+
 import net.ktrnet.game.base.object.GObject;
 
 public class GCharacter extends GObject {
+
+	/** ジャンプ速度[px/ms]  */
+	private static final double JUMP_SPEED = 1;
 
 	private long preActionTime = -1;
 
 	private boolean jumping = false;
 	private int height = 0;
 
-	// pixel / ms
-	private int acceleration = 0;
+	public GCharacter() {
+		super();
+	}
+
+	public GCharacter(int x, int y, double scale, Image image) {
+		super(x, y, scale, image);
+	}
+
+	public GCharacter(int x, int y, Image image) {
+		super(x, y, image);
+	}
+
+	public GCharacter(int x, int y, int width, int height, Image image) {
+		super(x, y, width, height, image);
+	}
 
 	public void walk() {
 		this.setX(this.getX() + 10);
@@ -25,23 +43,29 @@ public class GCharacter extends GObject {
 		// 初速をセット
 		// ステータスをセット
 		this.jumping = true;
-
-
 	}
 
 	public void update(long time) {
 
 		if (this.jumping) {
 
-			int y = this.getY();
-			int jumpHeight = acceleration * (int)(time - preActionTime);
-			y = y - jumpHeight;
-			this.setY(y);
+			// ここからジャンプによる上移動
+			long elapseTime = time - this.preActionTime;
 
+			int y = this.getY();
+			double jumpHeight = JUMP_SPEED * elapseTime;
+			y = y - (int)jumpHeight;
+			this.setY(this.getY() - (int)jumpHeight);
+
+			this.height += jumpHeight;
+
+			// ここからジャンプ解除処理
 			if (height <= 0) {
 				this.jumping = false;
 				this.height = 0;
 			}
 		}
+
+		this.preActionTime = time;
 	}
 }
