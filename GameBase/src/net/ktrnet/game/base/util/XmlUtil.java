@@ -8,13 +8,17 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XmlUtil {
@@ -106,5 +110,43 @@ public class XmlUtil {
 		}
 
 		return document;
+	}
+
+	public static List<Element> findElement(Element e, String tags) {
+
+		String[] findTagList = tags.split("\\.", 2);
+
+		List<Element> findedList = new ArrayList<Element>();
+
+		NodeList children = e.getElementsByTagName(findTagList[0]);
+		for (int i = 0 ; i < children.getLength() ; i++) {
+			if (findTagList.length > 1) {
+				findedList.addAll(
+						findElement((Element)children.item(i), findTagList[1]));
+			} else {
+				findedList.add((Element)children.item(i));
+			}
+		}
+
+		return findedList;
+	}
+
+	public static String getElementValue(Element e, String tags) {
+
+		List<Element> findedList = findElement(e, tags);
+		if (findedList.size() == 0) {
+			return null;
+		}
+
+		String eValue = null;
+
+		Element finded = findedList.get(0);
+		if (finded.hasAttribute("value")) {
+			eValue = finded.getAttribute("value");
+		} else {
+			eValue = finded.getTextContent();
+		}
+
+		return eValue;
 	}
 }

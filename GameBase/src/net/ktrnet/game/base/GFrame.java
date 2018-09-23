@@ -1,34 +1,69 @@
 package net.ktrnet.game.base;
 
-import java.awt.GraphicsConfiguration;
-import java.awt.HeadlessException;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
-public class GFrame extends JFrame {
+public class GFrame extends JFrame implements WindowListener {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1L;
 
-	public GFrame() throws HeadlessException {
-		// TODO 自動生成されたコンストラクター・スタブ
+
+	private GPanel panel = null;
+
+	public GFrame() {
+		this.panel = new GPanel();
+		this.add(this.panel);
 	}
 
-	public GFrame(GraphicsConfiguration gc) {
-		super(gc);
-		// TODO 自動生成されたコンストラクター・スタブ
+	public void startGame() {
+		this.panel.init();
+		this.panel.startGame();
 	}
 
-	public GFrame(String title) throws HeadlessException {
-		super(title);
-		// TODO 自動生成されたコンストラクター・スタブ
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 
-	public GFrame(String title, GraphicsConfiguration gc) {
-		super(title, gc);
-		// TODO 自動生成されたコンストラクター・スタブ
+	@Override
+	public void windowClosed(WindowEvent e) {
+		System.out.println("window Closed.");
+		this.panel.abortGame();
 	}
 
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO 自動生成されたメソッド・スタブ
+
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO 自動生成されたメソッド・スタブ
+
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO 自動生成されたメソッド・スタブ
+
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO 自動生成されたメソッド・スタブ
+
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO 自動生成されたメソッド・スタブ
+
+	}
 
 
 }

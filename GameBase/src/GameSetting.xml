@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GameSetting>
+	<window>
+		<title>テストタイトル</title>
+		<height>250</height>
+		<width>250</width>
+		<initScene ref=""/>
+	</window>
+
+	<Scenes>
+		<Scene id="">
+			<Background>
+				<color name="black"/>
+			</Background>
+			<World>
+
+			</World>
+
+			<KeyAction class=""/>
+		</Scene>
+	</Scenes>
+
+
+</GameSetting>

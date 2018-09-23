@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/GameSettingSchema" xmlns:tns="http://www.example.org/GameSettingSchema" elementFormDefault="qualified">
+
+
+
+    <simpleType name="x">
+    	<restriction base="int"></restriction>
+    </simpleType>
+
+    <simpleType name="y">
+    	<restriction base="int"></restriction>
+    </simpleType>
+
+    <simpleType name="width">
+    	<restriction base="int"></restriction>
+    </simpleType>
+
+    <simpleType name="height">
+    	<restriction base="int"></restriction>
+    </simpleType>
+
+    <simpleType name="id">
+    	<restriction base="string"></restriction>
+    </simpleType>
+
+    <complexType name="GameObject">
+    	<choice>
+    		<element name="image" type="string"></element>
+    	</choice>
+
+    	<attribute name="ref" type="string"></attribute>
+    </complexType>
+    
+    <element name="NewElement" type="string"></element>
+
+
+
+    <attributeGroup name="rgb">
+    	<attribute name="r" use="required">
+    		<simpleType>
+    			<restriction base="int">
+    				<minExclusive value="0"></minExclusive>
+    				<maxExclusive value="255"></maxExclusive>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    	<attribute name="g" use="required">
+    		<simpleType>
+    			<restriction base="int">
+    				<minExclusive value="0"></minExclusive>
+    				<maxExclusive value="255"></maxExclusive>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    	<attribute name="b" use="required">
+    		<simpleType>
+    			<restriction base="int">
+    				<minExclusive value="0"></minExclusive>
+    				<maxExclusive value="255"></maxExclusive>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    </attributeGroup>
+
+    
+    <attribute name="NewAttribute" type="string"></attribute>
+
+
+    <complexType name="color">
+    	<choice></choice>
+        <attributeGroup ref="tns:rgb"></attributeGroup>
+    </complexType>
+</schema>

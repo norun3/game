@@ -15,8 +15,7 @@ import javax.swing.JPanel;
 
 import net.ktrnet.game.base.exception.GameRuntimeException;
 import net.ktrnet.game.base.input.KeyStateManager;
-import net.ktrnet.game.base.object.GObject;
-import net.ktrnet.game.base.object.GObjectManager;
+import net.ktrnet.game.base.object.GGraphic;
 import net.ktrnet.game.base.util.GameTime;
 
 public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyListener, FocusListener {
@@ -44,7 +43,6 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	/** １秒（ミリ秒単位） = 1000ms */
 	private static final long MILLSEC = 1000;
 
-
 	/** millisecond / frame */
 	private long mspframe = 1000 / 60;
 
@@ -55,28 +53,24 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	private KeyStateManager keyman = null;
 
 	/** ゲーム中のオブジェクトを管理する変数 */
-	private GObjectManager gobjman = null;
+	private GGraphic graphic = null;
 
 	/** ゲームループのメインスレッド */
 	private Thread mainThread = null;
 
 	public GPanel() {
-		this.init();
 	}
 
 	public GPanel(LayoutManager layout) {
 		super(layout);
-		this.init();
 	}
 
 	public GPanel(boolean isDoubleBuffered) {
 		super(isDoubleBuffered);
-		this.init();
 	}
 
 	public GPanel(LayoutManager layout, boolean isDoubleBuffered) {
 		super(layout, isDoubleBuffered);
-		this.init();
 	}
 
 	/**
@@ -85,10 +79,10 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 * クラス内変数の初期化処理を行う。
 	 * </p>
 	 */
-	private void init() {
+	public void init() {
 		this.gameStatus = -1;
 		this.keyman = new KeyStateManager();
-		this.gobjman = new GObjectManager();
+		this.graphic = new GGraphic();
 		// スレッド作成
 		this.mainThread = new Thread(this);
 
@@ -116,7 +110,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 		// 処理結果
 		int result = -1;
 
-		result = procBefore(this.gobjman);
+		result = procBefore(this.graphic);
 		if (result != RESULT_SUCCESS) {
 			return;
 		}
@@ -132,14 +126,14 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 
 				if (this.gameStatus == GAME_STATE_ACTIVE) {
 
-					result = procKey(this.gobjman, this.keyman);
+					result = procKey(this.graphic, this.keyman);
 					// 処理結果＝成功　以外の場合、ループ終了
 					if (result != RESULT_SUCCESS) {
 						this.gameStatus = GAME_STATE_ABEND;
 						break;
 					}
 
-					result = procMain(this.gobjman);
+					result = procMain(this.graphic);
 					// 処理結果＝成功　以外の場合、ループ終了
 					if (result != RESULT_SUCCESS) {
 						this.gameStatus = GAME_STATE_ABEND;
@@ -148,14 +142,14 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 
 				} else if (this.gameStatus == GAME_STATE_PAUSE) {
 
-					result = procKeyPause(this.gobjman, this.keyman);
+					result = procKeyPause(this.graphic, this.keyman);
 					// 処理結果＝成功　以外の場合、ループ終了
 					if (result != RESULT_SUCCESS) {
 						this.gameStatus = GAME_STATE_ABEND;
 						break;
 					}
 
-					result = procMainPause(this.gobjman);
+					result = procMainPause(this.graphic);
 					// 処理結果＝成功　以外の場合、ループ終了
 					if (result != RESULT_SUCCESS) {
 						this.gameStatus = GAME_STATE_ABEND;
@@ -189,10 +183,10 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 		// 最終処理
 		switch(this.gameStatus) {
 		case GAME_STATE_END:
-			procNormalEnd(gobjman);
+			procNormalEnd(graphic);
 			break;
 		case GAME_STATE_ABEND:
-			procAbnormalEnd(gobjman);
+			procAbnormalEnd(graphic);
 			break;
 		default:
 			throw new GameRuntimeException("ステータスが異常です(" + this.gameStatus + ")");
@@ -220,7 +214,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 * @param gobjman ゲームオブジェクト管理クラス
 	 * @return ゲーム状態
 	 */
-	protected int procBefore(GObjectManager gobjman) {
+	protected int procBefore(GGraphic graphic) {
 		// 子クラスで実装
 		return RESULT_SUCCESS;
 	}
@@ -235,7 +229,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 * @param keyman キー状態管理クラス
 	 * @return ゲーム状態
 	 */
-	protected int procKey(GObjectManager gobjman, KeyStateManager keyman) {
+	protected int procKey(GGraphic graphic, KeyStateManager keyman) {
 		// 子クラスで実装
 		return RESULT_SUCCESS;
 	}
@@ -251,9 +245,9 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 * @param keyman キー状態管理クラス
 	 * @return ゲーム状態
 	 */
-	protected int procKeyPause(GObjectManager gobjman, KeyStateManager keyman) {
+	protected int procKeyPause(GGraphic graphic, KeyStateManager keyman) {
 		// 子クラスで実装
-		return procKey(gobjman, keyman);
+		return procKey(graphic, keyman);
 	}
 
 	/**
@@ -265,7 +259,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 * @param gobjman ゲームオブジェクト管理クラス
 	 * @return ゲーム状態
 	 */
-	protected int procMain(GObjectManager gobjman) {
+	protected int procMain(GGraphic graphic) {
 		// 子クラスで実装
 		return RESULT_SUCCESS;
 	}
@@ -280,9 +274,9 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 * @param gobjman ゲームオブジェクト管理クラス
 	 * @return ゲーム状態
 	 */
-	protected int procMainPause(GObjectManager gobjman) {
+	protected int procMainPause(GGraphic graphic) {
 		// 子クラスで実装
-		return procMain(gobjman);
+		return procMain(graphic);
 	}
 
 	/**
@@ -294,7 +288,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 * @param gobjman ゲームオブジェクト管理クラス
 	 * @return ゲーム状態
 	 */
-	protected int procPauseStart(GObjectManager gobjman) {
+	protected int procPauseStart(GGraphic graphic) {
 		// 子クラスで実装
 		return RESULT_SUCCESS;
 	}
@@ -308,7 +302,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 * @param gobjman ゲームオブジェクト管理クラス
 	 * @return ゲーム状態
 	 */
-	protected int procPauseEnd(GObjectManager gobjman) {
+	protected int procPauseEnd(GGraphic graphic) {
 		// 子クラスで実装
 		return RESULT_SUCCESS;
 	}
@@ -322,7 +316,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 * </p>
 	 * @param gobjman ゲームオブジェクト管理クラス
 	 */
-	protected void procNormalEnd(GObjectManager gobjman) {
+	protected void procNormalEnd(GGraphic graphic) {
 		return;
 	}
 
@@ -334,7 +328,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 	 * </p>
 	 * @param gobjman ゲームオブジェクト管理クラス
 	 */
-	protected void procAbnormalEnd(GObjectManager gobjman) {
+	protected void procAbnormalEnd(GGraphic graphic) {
 		return;
 	}
 
@@ -388,33 +382,8 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 
 		c = g2d.getColor();
 
-		// 背景描画
-
-		// 背景画像が指定されている場合、画像を描画
-		if (gobjman.getBackImage() != null) {
-
-			g2d.drawImage(gobjman.getBackImage(),
-					0, 0, this.getWidth(), this.getHeight(), Color.BLACK, null);
-
-		// 背景画像が指定されてなく背景色が指定されている場合、背景色を描画
-		} else if (gobjman.getBackColor() != null) {
-			g2d.setColor(gobjman.getBackColor());
-			g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
-
-		// 画像も色も指定されていない場合は、黒色で描画
-		} else {
-			g2d.setColor(Color.BLACK);
-			g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
-		}
-
-		// オブジェクト描画
-		for (int layer : gobjman.getLayeres()) {
-			for (GObject gobj : gobjman.getGameObjects(layer)) {
-				g2d.drawImage(gobj.getImage(),
-						gobj.getX(), gobj.getY(),
-						gobj.getWidth(), gobj.getHeight(), null);
-			}
-		}
+		// 描画処理
+		graphic.draw(g2d);
 
 		g2d.setColor(c);
 	}
@@ -445,7 +414,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 		if (this.mainThread.isAlive()) {
 			if (this.gameStatus == GAME_STATE_ACTIVE) {
 				this.gameStatus = GAME_STATE_PAUSE;
-				procPauseStart(this.gobjman);
+				procPauseStart(this.graphic);
 			}
 		}
 	}
@@ -454,7 +423,7 @@ public class GPanel extends JPanel implements Runnable, KeyListener, HierarchyLi
 		if (this.mainThread.isAlive()) {
 			if (this.gameStatus == GAME_STATE_PAUSE) {
 				this.gameStatus = GAME_STATE_ACTIVE;
-				procPauseEnd(this.gobjman);
+				procPauseEnd(this.graphic);
 			}
 		}
 	}

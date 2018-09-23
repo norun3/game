@@ -11,15 +11,22 @@ public class SystemInfo {
 
 	public static SystemInfo getInstance() {
 		if (instance == null) {
-			// instance = new SystemUtil();
+			instance = new SystemInfo();
 		}
 		return instance;
 	}
 
 	private JFrame frame = null;
 
-	private SystemInfo(JFrame frame) {
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
 		this.frame = frame;
+	}
+
+	private SystemInfo() {
 	}
 
 	public Point getWindowPos() {

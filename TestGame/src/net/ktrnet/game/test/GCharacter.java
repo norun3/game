@@ -4,6 +4,7 @@ package net.ktrnet.game.test;
 import java.awt.Image;
 
 import net.ktrnet.game.base.object.GObject;
+import net.ktrnet.game.base.util.GameTime;
 
 public class GCharacter extends GObject {
 
@@ -45,7 +46,9 @@ public class GCharacter extends GObject {
 		this.jumping = true;
 	}
 
-	public void update(long time) {
+	public void update() {
+
+		long time = GameTime.getSystemTime();
 
 		if (this.jumping) {
 

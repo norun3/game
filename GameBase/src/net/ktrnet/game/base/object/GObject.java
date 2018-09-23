@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 
 // TODO
-public class GObject implements GDraw {
+public class GObject implements GDraw, GUpdate {
 
 	private int x = 0;
 	private int y = 0;
@@ -130,11 +130,17 @@ public class GObject implements GDraw {
 			} else {
 				g2d.setColor(Color.BLACK);
 			}
-			g2d.drawRect(this.x, this.y, this.width, this.height);
+			g2d.fillRect(this.x, this.y, this.width, this.height);
 			g2d.setColor(preColor);
 		}
 
 		return;
+	}
+
+	@Override
+	public void update() {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 
 }
