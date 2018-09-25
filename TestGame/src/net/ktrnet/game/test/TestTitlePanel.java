@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 
 import net.ktrnet.game.base.GPanel;
 import net.ktrnet.game.base.input.KeyStateManager;
-import net.ktrnet.game.base.object.GGraphic;
+import net.ktrnet.game.base.object.GScene;
 import net.ktrnet.game.base.util.ResourceUtil;
 
 public class TestTitlePanel extends GPanel {
@@ -29,7 +29,7 @@ public class TestTitlePanel extends GPanel {
 
 
 	@Override
-	protected int procBefore(GGraphic graphic) {
+	protected int procBefore(GScene graphic) {
 
 		// 背景設定
 		graphic.setBackgroundColor(Color.BLUE);
@@ -44,7 +44,7 @@ public class TestTitlePanel extends GPanel {
 
 
 	@Override
-	protected int procKey(GGraphic graphic, KeyStateManager keyman) {
+	protected int procKey(GScene graphic, KeyStateManager keyman) {
 
 		int result = GPanel.RESULT_SUCCESS;
 
@@ -98,7 +98,7 @@ public class TestTitlePanel extends GPanel {
 	}
 
 	@Override
-	protected int procMain(GGraphic graphic) {
+	protected int procMain(GScene graphic) {
 
 //		for (GObject gobj : gobjman.getGameObjects()) {
 //
@@ -113,12 +113,12 @@ public class TestTitlePanel extends GPanel {
 	}
 
 	@Override
-	protected void procNormalEnd(GGraphic graphic) {
+	protected void procNormalEnd(GScene graphic) {
 		System.out.println("lastEndProccess.");
 	}
 
 	@Override
-	protected void procAbnormalEnd(GGraphic graphic) {
+	protected void procAbnormalEnd(GScene graphic) {
 		System.out.println("lastAbendProccess.");
 	}
 

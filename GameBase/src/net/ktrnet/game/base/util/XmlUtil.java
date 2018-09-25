@@ -131,6 +131,15 @@ public class XmlUtil {
 		return findedList;
 	}
 
+	public static Element getElement(Element e, String tags) {
+		List<Element> findedList = findElement(e, tags);
+		if (findedList.size() == 0) {
+			return null;
+		}
+
+		return findedList.get(0);
+	}
+
 	public static String getElementValue(Element e, String tags) {
 
 		List<Element> findedList = findElement(e, tags);

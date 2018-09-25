@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GameSetting>
-	<window>
-		<title>テストタイトル</title>
-		<height>250</height>
-		<width>250</width>
-		<initScene ref=""/>
-	</window>
+	<window title="テストタイトル" width="250" height="250" sceneId="" />
 
 	<Scenes>
-		<Scene id="">
-			<Background>
-				<color name="black"/>
-			</Background>
-			<World>
+		<Scene id=""  focusObject="jashinchan">
+			<BackGround color="black"/>
+			<FrontGround>
+				<GameObjects>
 
-			</World>
-
-			<KeyAction class=""/>
+				</GameObjects>
+			</FrontGround>
+			<MainGround>
+				<GameObjects>
+					<GameObject id="jashinchan" image="./images/chr001_jashinchan.png"  x="50" y="50" width="50" height="50"
+						class="net.ktrnet.game.action.object.GActionChara" />
+				</GameObjects>
+				<GameWorldLogic class=""/>
+			</MainGround>
+			<GameLogic class=""/>
 		</Scene>
 	</Scenes>
-
 
 </GameSetting>

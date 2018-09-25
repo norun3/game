@@ -1,4 +1,4 @@
-package net.ktrnet.game.base.object;
+package net.ktrnet.game.base.logic;
 
 public interface GUpdate {
 

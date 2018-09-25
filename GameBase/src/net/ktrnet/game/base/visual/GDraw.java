@@ -1,4 +1,4 @@
-package net.ktrnet.game.base.object;
+package net.ktrnet.game.base.visual;
 
 import java.awt.Graphics2D;
 

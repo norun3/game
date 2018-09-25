@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import net.ktrnet.game.base.visual.GObject;
+
 // TODO
 public class GObjectManager {
 

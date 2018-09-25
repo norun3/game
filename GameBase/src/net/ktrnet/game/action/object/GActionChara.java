@@ -1,4 +1,4 @@
-package net.ktrnet.game.test;
+package net.ktrnet.game.action.object;
 
 
 import java.awt.Image;
@@ -6,7 +6,7 @@ import java.awt.Image;
 import net.ktrnet.game.base.util.GameTime;
 import net.ktrnet.game.base.visual.GObject;
 
-public class GCharacter extends GObject {
+public class GActionChara extends GObject {
 
 	/** ジャンプ速度[px/ms]  */
 	private static final double JUMP_SPEED = 1;
@@ -16,20 +16,20 @@ public class GCharacter extends GObject {
 	private boolean jumping = false;
 	private int height = 0;
 
-	public GCharacter() {
+	public GActionChara() {
 		super();
 	}
 
-	public GCharacter(int x, int y, double scale, Image image) {
-		super(x, y, scale, image);
+	public GActionChara(String id, int x, int y, double scale, Image image) {
+		super(id, x, y, scale, image);
 	}
 
-	public GCharacter(int x, int y, Image image) {
-		super(x, y, image);
+	public GActionChara(String id, int x, int y, Image image) {
+		super(id, x, y, image);
 	}
 
-	public GCharacter(int x, int y, int width, int height, Image image) {
-		super(x, y, width, height, image);
+	public GActionChara(String id, int x, int y, int width, int height, Image image) {
+		super(id, x, y, width, height, image);
 	}
 
 	public void walk() {

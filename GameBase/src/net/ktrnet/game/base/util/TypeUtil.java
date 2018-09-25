@@ -25,4 +25,17 @@ public class TypeUtil {
 
 		return v;
 	}
+
+	public static Boolean parseBoolean(String text) {
+
+		Boolean b = null;
+
+		if (text == null || text.isEmpty()) {
+			return null;
+		}
+
+		b = Boolean.parseBoolean(text);
+
+		return b;
+	}
 }

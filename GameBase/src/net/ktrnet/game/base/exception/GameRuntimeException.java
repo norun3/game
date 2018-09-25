@@ -2,6 +2,9 @@ package net.ktrnet.game.base.exception;
 
 public class GameRuntimeException extends RuntimeException {
 
+	/** serialVersionUID */
+	private static final long serialVersionUID = 1L;
+
 	public GameRuntimeException() {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}

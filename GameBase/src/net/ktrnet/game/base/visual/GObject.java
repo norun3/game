@@ -1,12 +1,16 @@
-package net.ktrnet.game.base.object;
+package net.ktrnet.game.base.visual;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import net.ktrnet.game.base.logic.GUpdate;
+
 // TODO
 public class GObject implements GDraw, GUpdate {
 
+	private String id = null;
+	private String name = null;
 	private int x = 0;
 	private int y = 0;
 	private int width = 0;
@@ -19,15 +23,16 @@ public class GObject implements GDraw, GUpdate {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
-	public GObject(int x, int y, Image image) {
+	public GObject(String id, int x, int y, Image image) {
 		this.setOriginalImage(x, y, image);
 	}
 
-	public GObject(int x, int y, int width, int height, Image image) {
+	public GObject(String id, int x, int y, int width, int height, Image image) {
 		this.setScaleImage(x, y, width, height, image);
 	}
 
-	public GObject(int x, int y, int width, int height, Color color) {
+	public GObject(String id, int x, int y, int width, int height, Color color) {
+		this.id = id;
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -36,7 +41,9 @@ public class GObject implements GDraw, GUpdate {
 		this.color = color;
 	}
 
-	public GObject(int x, int y, double scale, Image image) {
+	public GObject(String id, int x, int y, double scale, Image image) {
+
+		this.setId(id);
 
 		int width = image.getWidth(null);
 		int height = image.getHeight(null);
@@ -58,6 +65,22 @@ public class GObject implements GDraw, GUpdate {
 		this.height = height;
 		this.image = image;
 		this.color = null;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getX() {
