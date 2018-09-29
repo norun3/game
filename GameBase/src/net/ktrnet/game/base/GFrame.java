@@ -64,6 +64,8 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 
 	public GFrame() {
 		this.panel = new GPanel();
+		this.scenes = new HashMap<String, GScene>();
+		this.scene = null;
 		this.add(this.panel);
 	}
 
@@ -77,7 +79,9 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 
 		// キー入力受付登録
 		this.addKeyListener(this);
-
+		// ウィンドウイベント受取
+		this.addWindowListener(this);
+		// フォーカス設定
 		this.setFocusable(true);
 
 		this.startGame();
@@ -89,14 +93,12 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 		System.out.println("run start");
 
 		// 実行前チェック処理
-		if (this.scene != null) {
-			// TODO : エラーメッセージ
-			return;
+		if (this.scene == null) {
+			throw new GameRuntimeException("Scene is not exists.");
 		}
 
 		if (this.scene.getGameLogic() == null) {
-			// TODO : エラーメッセージ
-			return;
+			throw new GameRuntimeException("GameLogic is not defined.");
 		}
 
 		// フレーム処理用変数：フレーム開始時間（ミリ秒）
@@ -112,6 +114,7 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 
 		result = this.scene.getGameLogic().procBefore(this.scene);
 		if (result != RESULT_SUCCESS) {
+			System.out.println("GameLogic procBefore is returned failed.");
 			return;
 		}
 
@@ -119,6 +122,8 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 		startTime = GameTime.getSystemTime();
 
 		// 処理ループ
+		System.out.println("game loop start.");
+
 		this.gameStatus = GAME_STATE_ACTIVE;
 		while(this.gameStatus == GAME_STATE_ACTIVE || this.gameStatus == GAME_STATE_PAUSE) {
 
@@ -131,6 +136,7 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 					// 処理結果＝成功　以外の場合、ループ終了
 					if (result != RESULT_SUCCESS) {
 						this.gameStatus = GAME_STATE_ABEND;
+						System.out.println("Game Loop procKey returned failed.");
 						break;
 					}
 
@@ -138,6 +144,7 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 					// 処理結果＝成功　以外の場合、ループ終了
 					if (result != RESULT_SUCCESS) {
 						this.gameStatus = GAME_STATE_ABEND;
+						System.out.println("Game Loop procMain returned failed.");
 						break;
 					}
 
@@ -147,6 +154,7 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 					// 処理結果＝成功　以外の場合、ループ終了
 					if (result != RESULT_SUCCESS) {
 						this.gameStatus = GAME_STATE_ABEND;
+						System.out.println("Game Loop procKeyPause returned failed.");
 						break;
 					}
 
@@ -154,6 +162,7 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 					// 処理結果＝成功　以外の場合、ループ終了
 					if (result != RESULT_SUCCESS) {
 						this.gameStatus = GAME_STATE_ABEND;
+						System.out.println("Game Loop procMainPause returned failed.");
 						break;
 					}
 
@@ -173,6 +182,7 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 				try {
 					Thread.sleep(sleepTime);
 				} catch (InterruptedException e) {
+					System.out.println("game loop exit.");
 					this.gameStatus = GAME_STATE_ABEND;
 					break;
 				}
@@ -183,6 +193,8 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 
 			startTime = GameTime.getSystemTime();
 		}
+
+		System.out.println("game loop end.");
 
 		// 最終処理
 		switch(this.gameStatus) {

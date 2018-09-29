@@ -11,10 +11,10 @@ public class GObject implements GDraw, GUpdate {
 
 	private String id = null;
 	private String name = null;
-	private int x = 0;
-	private int y = 0;
-	private int width = 0;
-	private int height = 0;
+	private double x = 0;
+	private double y = 0;
+	private double width = 0;
+	private double height = 0;
 	private Image image = null;
 	private Color color = null;
 
@@ -83,42 +83,42 @@ public class GObject implements GDraw, GUpdate {
 		this.name = name;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
 
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
 
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
 
-	public int getWidth() {
+	public double getWidth() {
 		return width;
 	}
 
 
-	public void setWidth(int width) {
+	public void setWidth(double width) {
 		this.width = width;
 	}
 
 
-	public int getHeight() {
+	public double getHeight() {
 		return height;
 	}
 
 
-	public void setHeight(int height) {
+	public void setHeight(double height) {
 		this.height = height;
 	}
 
@@ -143,17 +143,17 @@ public class GObject implements GDraw, GUpdate {
 	@Override
 	public void draw(Graphics2D g2d) {
 
-		if (this.image != null) {
-			g2d.drawImage(this.image,
-					this.x, this.y, this.width, this.height, Color.BLACK, null);
+		if (this.getImage() != null) {
+			g2d.drawImage(this.getImage(),
+					(int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight(), Color.BLACK, null);
 		} else {
 			Color preColor = g2d.getColor();
-			if (this.color != null) {
-				g2d.setColor(this.color);
+			if (this.getColor() != null) {
+				g2d.setColor(this.getColor());
 			} else {
 				g2d.setColor(Color.BLACK);
 			}
-			g2d.fillRect(this.x, this.y, this.width, this.height);
+			g2d.fillRect((int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight());
 			g2d.setColor(preColor);
 		}
 

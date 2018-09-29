@@ -155,14 +155,18 @@ public class GameStart {
 			Element eFrontGround = XmlUtil.getElement(scene, "FrontGround");
 			if (eFrontGround != null) {
 				GFrontGround frontGround = new GFrontGround();
-				frontGround = (GFrontGround)loadGameObjects(eFrontGround, gobjCheckList);
+				GObjectList gobjects = loadGameObjects(eFrontGround, gobjCheckList);
+				frontGround = new GFrontGround();
+				frontGround.addAll(gobjects);
 				gscene.setFrontGround(frontGround);
 			}
 
 			Element eMainGround = XmlUtil.getElement(scene, "MainGround");
 			if (eMainGround != null) {
 				GMainGround mainGround = new GMainGround();
-				mainGround = (GMainGround)loadGameObjects(eMainGround, gobjCheckList);
+				GObjectList gobjects = loadGameObjects(eMainGround, gobjCheckList);
+				mainGround = new GMainGround();
+				mainGround.addAll(gobjects);
 
 				Element eGameWorldLogic = XmlUtil.getElement(eMainGround, "GameWorldLogic");
 				try {
@@ -171,6 +175,8 @@ public class GameStart {
 				} catch (GameXmlException e) {
 					// 定義なしの場合、設定しない
 				}
+
+				gscene.setMainGround(mainGround);
 			}
 
 			Element eGameLogic = XmlUtil.getElement(scene, "GameLogic");
@@ -239,7 +245,7 @@ public class GameStart {
 		Integer width = TypeUtil.parseInteger(eGameObject.getAttribute("width"));
 		Integer height = TypeUtil.parseInteger(eGameObject.getAttribute("height"));
 
-		if (id == null || clazz == null || imagePath == null || x == null || y == null || width == null || height == null) {
+		if (id == null || clazz == null || imagePath == null) {
 			StringBuffer sbAttrs = new StringBuffer();
 			if (id == null) {
 				sbAttrs.append("id ");
@@ -251,22 +257,6 @@ public class GameStart {
 
 			if (imagePath == null) {
 				sbAttrs.append("image ");
-			}
-
-			if (x == null) {
-				sbAttrs.append("x ");
-			}
-
-			if (y == null) {
-				sbAttrs.append("y ");
-			}
-
-			if (width == null) {
-				sbAttrs.append("width ");
-			}
-
-			if (height == null) {
-				sbAttrs.append("height ");
 			}
 
 			throw new GameXmlException("GameSetting.xml", eGameObject, sbAttrs.toString(),
@@ -294,6 +284,22 @@ public class GameStart {
 			// クラスがGObjectを継承していない
 			throw new GameXmlException("GameSetting.xml", eGameObject, "class",
 					"class is not extends GObject class.(" + clazz + ")");
+		}
+
+		if (x == null) {
+			x = 0;
+		}
+
+		if (y == null) {
+			y = 0;
+		}
+
+		if (width == null) {
+			width = image.getWidth(null);
+		}
+
+		if (height == null) {
+			height = image.getHeight(null);
 		}
 
 		gobj = (GObject)obj;
@@ -333,7 +339,7 @@ public class GameStart {
 
 	public void execute() {
 		this.frame.setVisible(true);
-		this.frame.startGame();
+		this.frame.initialize();
 	}
 
 }

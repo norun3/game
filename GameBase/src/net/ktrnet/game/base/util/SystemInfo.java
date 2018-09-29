@@ -9,6 +9,22 @@ public class SystemInfo {
 
 	private static SystemInfo instance = null;
 
+	public static double getFrameWidth() {
+		return instance.getWindowSize().getWidth();
+	}
+
+	public static double getFrameHeight() {
+		return instance.getWindowSize().getHeight();
+	}
+
+	public static double getFramePosX() {
+		return instance.getWindowPos().getX();
+	}
+
+	public static double getFramePoxY() {
+		return instance.getWindowPos().getY();
+	}
+
 	public static SystemInfo getInstance() {
 		if (instance == null) {
 			instance = new SystemInfo();
@@ -26,19 +42,16 @@ public class SystemInfo {
 		this.frame = frame;
 	}
 
-	private SystemInfo() {
-	}
-
-	public Point getWindowPos() {
+	private Point getWindowPos() {
 
 		return this.frame.getLocation();
 	}
 
-	public Dimension getWindowSize() {
+	private Dimension getWindowSize() {
 		return this.frame.getSize();
 	}
 
-	public Dimension getCanvasSize() {
+	private Dimension getCanvasSize() {
 		return this.frame.getContentPane().getSize();
 	}
 

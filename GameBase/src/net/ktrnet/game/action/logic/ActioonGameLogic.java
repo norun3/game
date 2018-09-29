@@ -7,6 +7,7 @@ import net.ktrnet.game.base.GFrame;
 import net.ktrnet.game.base.input.KeyStateManager;
 import net.ktrnet.game.base.logic.GameLogic;
 import net.ktrnet.game.base.object.GScene;
+import net.ktrnet.game.base.visual.GObject;
 
 public class ActioonGameLogic implements GameLogic {
 
@@ -16,16 +17,20 @@ public class ActioonGameLogic implements GameLogic {
 
 	@Override
 	public int procBefore(GScene scene) {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		// 処理なし
+		return GFrame.RESULT_SUCCESS;
 	}
 
 	@Override
 	public int procKey(GScene scene, KeyStateManager keyman) {
 
-		int result = GFrame.RESULT_SUCCESS;
+		GObject gobj = scene.getFocusObject();
+		if (gobj == null || !(gobj instanceof GActionChara)) {
+			return GFrame.RESULT_SUCCESS;
+		}
+		GActionChara chara = (GActionChara)gobj;
 
-		GActionChara chara = (GActionChara)scene.getFocusObject();
+		int result = GFrame.RESULT_SUCCESS;
 
 		if (keyman.isPressed(KeyEvent.VK_RIGHT)) {
 			System.out.println("press key right.");
@@ -61,31 +66,31 @@ public class ActioonGameLogic implements GameLogic {
 	@Override
 	public int procKeyPause(GScene scene, KeyStateManager keyman) {
 		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		return GFrame.RESULT_SUCCESS;
 	}
 
 	@Override
 	public int procMain(GScene scene) {
 		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		return GFrame.RESULT_SUCCESS;
 	}
 
 	@Override
 	public int procMainPause(GScene scene) {
 		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		return GFrame.RESULT_SUCCESS;
 	}
 
 	@Override
 	public int procPauseStart(GScene scene) {
 		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		return GFrame.RESULT_SUCCESS;
 	}
 
 	@Override
 	public int procPauseEnd(GScene scene) {
 		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		return GFrame.RESULT_SUCCESS;
 	}
 
 	@Override

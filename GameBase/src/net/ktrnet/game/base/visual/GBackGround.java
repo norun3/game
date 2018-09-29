@@ -1,6 +1,7 @@
 package net.ktrnet.game.base.visual;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Image;
 
 import net.ktrnet.game.base.util.SystemInfo;
@@ -14,17 +15,29 @@ public class GBackGround extends GObject {
 	}
 
 	public GBackGround(Image image) {
-		super(BACKGROUND_ID, 0, 0,
-				(int)SystemInfo.getInstance().getWindowSize().getWidth(),
-				(int)SystemInfo.getInstance().getWindowSize().getHeight(),
-				image);
+		super(BACKGROUND_ID, 0, 0, 0, 0, image);
 	}
 
 	public GBackGround(Color color) {
-		super(BACKGROUND_ID, 0, 0,
-			(int)SystemInfo.getInstance().getWindowSize().getWidth(),
-			(int)SystemInfo.getInstance().getWindowSize().getHeight(),
-			color);
+		super(BACKGROUND_ID, 0, 0, 0, 0, color);
 	}
+
+	@Override
+	public double getWidth() {
+		return SystemInfo.getInstance().getWindowSize().getWidth();
+	}
+
+	@Override
+	public double getHeight() {
+		return SystemInfo.getInstance().getWindowSize().getHeight();
+	}
+
+	@Override
+	public void draw(Graphics2D g2d) {
+		super.draw(g2d);
+	}
+
+
+
 
 }
