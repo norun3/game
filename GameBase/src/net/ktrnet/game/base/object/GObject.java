@@ -1,10 +1,11 @@
-package net.ktrnet.game.base.visual;
+package net.ktrnet.game.base.object;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
 import net.ktrnet.game.base.logic.GUpdate;
+import net.ktrnet.game.base.visual.GDraw;
 
 // TODO
 public class GObject implements GDraw, GUpdate {
@@ -17,7 +18,8 @@ public class GObject implements GDraw, GUpdate {
 	private double height = 0;
 	private Image image = null;
 	private Color color = null;
-
+	private int repeatw = 1;
+	private int repeath = 1;
 
 	public GObject() {
 		// TODO 自動生成されたコンストラクター・スタブ
@@ -140,12 +142,51 @@ public class GObject implements GDraw, GUpdate {
 		this.color = color;
 	}
 
+	public int getRepeatw() {
+		return repeatw;
+	}
+
+	public void setRepeatw(int repeatw) {
+		this.repeatw = repeatw;
+	}
+
+	public int getRepeath() {
+		return repeath;
+	}
+
+	public void setRepeath(int repeath) {
+		this.repeath = repeath;
+	}
+
+	public double getRepeatWidth() {
+		return this.getRepeatw() * this.getWidth();
+	}
+
+	public double getRepeatHeight() {
+		return this.getRepeath() * this.getHeight();
+	}
+
 	@Override
 	public void draw(Graphics2D g2d) {
 
 		if (this.getImage() != null) {
-			g2d.drawImage(this.getImage(),
-					(int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight(), Color.BLACK, null);
+			int drawx = 0;
+			int drawy = 0;
+			int drawWidth = (int)this.getWidth();
+			int drawHeight = (int)this.getHeight();
+
+			for (int w = 0 ; w < this.getRepeatw() ; w++) {
+
+				for (int h = 0 ; h < this.getRepeath() ; h++) {
+
+					drawx = (int)this.getX() + (w * drawWidth);
+					drawy = (int)this.getY() + (h * drawHeight);
+
+					g2d.drawImage(this.getImage(),
+							drawx, drawy, drawWidth, drawHeight, Color.BLACK, null);
+				}
+			}
+
 		} else {
 			Color preColor = g2d.getColor();
 			if (this.getColor() != null) {
@@ -153,7 +194,24 @@ public class GObject implements GDraw, GUpdate {
 			} else {
 				g2d.setColor(Color.BLACK);
 			}
-			g2d.fillRect((int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight());
+
+			int drawx = (int)this.getX();
+			int drawy = (int)this.getY();
+			int drawWidth = (int)this.getWidth();
+			int drawHeight = (int)this.getHeight();
+
+			for (int w = 0 ; w < this.getRepeatw() ; w++) {
+
+				for (int h = 0 ; h < this.getRepeath() ; h++) {
+
+					drawx = w * (int)this.getWidth();
+					drawy = h * (int)this.getHeight();
+
+					g2d.fillRect(drawx, drawy, drawWidth, drawHeight);
+				}
+			}
+
+
 			g2d.setColor(preColor);
 		}
 
@@ -165,5 +223,6 @@ public class GObject implements GDraw, GUpdate {
 		// TODO 自動生成されたメソッド・スタブ
 
 	}
+
 
 }

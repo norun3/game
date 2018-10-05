@@ -1,58 +1,52 @@
 package net.ktrnet.game.base.util;
 
-import java.awt.Dimension;
-import java.awt.Point;
-
 import javax.swing.JFrame;
 
 public class SystemInfo {
 
-	private static SystemInfo instance = null;
+	private static JFrame frame = null;
+	private static double fps = 60;
+	private static double frameSec = 1 / fps;
+	private static double frameMSec = frameSec * 1000;
 
 	public static double getFrameWidth() {
-		return instance.getWindowSize().getWidth();
+		return frame.getWidth();
 	}
 
 	public static double getFrameHeight() {
-		return instance.getWindowSize().getHeight();
+		return frame.getHeight();
 	}
 
 	public static double getFramePosX() {
-		return instance.getWindowPos().getX();
+		return frame.getX();
 	}
 
 	public static double getFramePoxY() {
-		return instance.getWindowPos().getY();
+		return frame.getY();
 	}
 
-	public static SystemInfo getInstance() {
-		if (instance == null) {
-			instance = new SystemInfo();
-		}
-		return instance;
+	public static double getCanvasWidth() {
+		return frame.getContentPane().getWidth();
 	}
 
-	private JFrame frame = null;
-
-	public JFrame getFrame() {
-		return frame;
+	public static double getCanvasHeight() {
+		return frame.getContentPane().getHeight();
 	}
 
-	public void setFrame(JFrame frame) {
-		this.frame = frame;
+	public static double getFps() {
+		return fps;
 	}
 
-	private Point getWindowPos() {
-
-		return this.frame.getLocation();
+	public static double getFrameSec() {
+		return frameSec;
 	}
 
-	private Dimension getWindowSize() {
-		return this.frame.getSize();
+	public static double getFrameMSec() {
+		return frameMSec;
 	}
 
-	private Dimension getCanvasSize() {
-		return this.frame.getContentPane().getSize();
+	public static void setFrame(JFrame frm) {
+		frame = frm;
 	}
 
 

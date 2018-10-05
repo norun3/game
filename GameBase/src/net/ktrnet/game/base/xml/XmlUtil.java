@@ -1,4 +1,4 @@
-package net.ktrnet.game.base.util;
+package net.ktrnet.game.base.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +20,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import net.ktrnet.game.base.util.TypeUtil;
 
 public class XmlUtil {
 
@@ -157,5 +159,14 @@ public class XmlUtil {
 		}
 
 		return eValue;
+	}
+
+	public static Integer getIntValue(Element e, String attr) {
+
+		return TypeUtil.parseInteger(e.getAttribute(attr));
+	}
+
+	public static String getStrValue(Element e, String attr) {
+		return e.getAttribute(attr);
 	}
 }

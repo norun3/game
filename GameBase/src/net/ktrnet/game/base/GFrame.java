@@ -15,6 +15,7 @@ import net.ktrnet.game.base.exception.GameRuntimeException;
 import net.ktrnet.game.base.input.KeyStateManager;
 import net.ktrnet.game.base.object.GScene;
 import net.ktrnet.game.base.util.GameTime;
+import net.ktrnet.game.base.util.SystemInfo;
 
 public class GFrame extends JFrame implements WindowListener, Runnable, KeyListener, FocusListener {
 
@@ -37,12 +38,6 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 
 	/** 処理結果コード：失敗 */
 	public static final int RESULT_FAILUE = 0x02;
-
-	/** １秒（ミリ秒単位） = 1000ms */
-	private static final long MILLSEC = 1000;
-
-	/** millisecond / frame */
-	private long mspframe = 1000 / 60;
 
 	/** ゲーム状態を表す変数：ゲームループの継続条件にもなる */
 	private int gameStatus = -1;
@@ -177,7 +172,7 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 
 			// フレーム調整
 			elapseTime = GameTime.getSystemTime() - startTime;
-			sleepTime = mspframe - elapseTime;
+			sleepTime = (long)SystemInfo.getFrameMSec() - elapseTime;
 			if (sleepTime > 0) {
 				try {
 					Thread.sleep(sleepTime);
@@ -209,17 +204,6 @@ public class GFrame extends JFrame implements WindowListener, Runnable, KeyListe
 		}
 
 		System.out.println("run end");
-	}
-
-	/**
-	 * FPS設定
-	 * <p>
-	 * 1秒あたりの描画フレーム数（Frame Per Seccond）を設定する。<br>
-	 * </p>
-	 * @param fps FPS
-	 */
-	public void setFps(int fps) {
-		this.mspframe = (long)((double)MILLSEC / (double)fps);
 	}
 
 	/**

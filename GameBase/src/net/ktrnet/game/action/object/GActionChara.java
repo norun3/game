@@ -3,8 +3,8 @@ package net.ktrnet.game.action.object;
 
 import java.awt.Image;
 
+import net.ktrnet.game.base.object.GObject;
 import net.ktrnet.game.base.util.GameTime;
-import net.ktrnet.game.base.visual.GObject;
 
 public class GActionChara extends GObject {
 
@@ -17,6 +17,8 @@ public class GActionChara extends GObject {
 	private long preActionTime = -1;
 
 	private boolean jumping = false;
+
+	private boolean fixed = false;
 
 	public GActionChara() {
 		super();
@@ -82,5 +84,13 @@ public class GActionChara extends GObject {
 
 	public void setVelocity(double velocity) {
 		this.velocity = velocity;
+	}
+
+	public boolean isFixed() {
+		return fixed;
+	}
+
+	public void setFixed(boolean fixed) {
+		this.fixed = fixed;
 	}
 }

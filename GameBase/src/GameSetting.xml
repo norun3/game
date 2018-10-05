@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GameSetting>
-	<window title="テストタイトル" width="250" height="250" sceneId="initScene" />
+	<window title="テストタイトル" width="500" height="500" sceneId="initScene" />
 
 	<Scenes>
 		<Scene id="initScene"  focusObject="jashinchan">
@@ -10,6 +10,8 @@
 				<GameObjects>
 					<GameObject id="jashinchan" image="./images/chr001_jashinchan.png"
 						x="50" y="0" class="net.ktrnet.game.action.object.GActionChara" />
+					<GameObject id="normal_block" class="net.ktrnet.game.base.object.GObject"
+						image="./images/block_normal.png" x="" y="400" width="50" height="50" repeatw="10" repeath="1"/>
 				</GameObjects>
 				<GameWorldLogic class="net.ktrnet.game.action.logic.GActionWorldLogic"/>
 			</MainGround>

@@ -3,9 +3,9 @@ package net.ktrnet.game.action.logic;
 import net.ktrnet.game.action.object.GActionChara;
 import net.ktrnet.game.base.GFrame;
 import net.ktrnet.game.base.logic.GameWorldLogic;
+import net.ktrnet.game.base.object.GObject;
 import net.ktrnet.game.base.util.GameTime;
 import net.ktrnet.game.base.util.SystemInfo;
-import net.ktrnet.game.base.visual.GObject;
 import net.ktrnet.game.base.visual.GObjectList;
 
 public class GActionWorldLogic implements GameWorldLogic {
@@ -41,21 +41,48 @@ public class GActionWorldLogic implements GameWorldLogic {
 
 		GActionChara chara = (GActionChara)gobj;
 
-		double height = 0;
+		if (!chara.isFixed()) {
 
-		// 高さ取得
-		height = calcHeight(chara, gobjects);
+			double height = 0;
 
-		// 接地していなかったら自由落下
-		if (height > 0) {
+			// 高さ取得
+			height = calcHeight(chara, gobjects);
 
-			// 落下距離
-			double fallHeight = calcFreeFallHeight(elapseTime);
+			// 接地していなかったら自由落下
+			if (height > 0) {
 
-			double nextY = chara.getY() + fallHeight;
-			chara.setY(nextY);
+				/*
+	移動距離＝物体速度×単位時間＋０．５×重力加速度×単位時間^2
+	現在位置＝現在位置＋（経過時間／単位時間）×移動距離
 
-			System.out.println("free falling.[" + fallHeight + "] -> nextY [" + nextY + "]");
+	物体速度＝物体速度＋重力加速度×経過時間
+
+	現在位置を出力
+				 */
+
+				double fallInitVelocity = chara.getVelocity() * SystemInfo.getFrameSec();
+				double fallPerSec = 0.5f * G * Math.pow(SystemInfo.getFrameSec(), 2);
+				fallPerSec =  fallInitVelocity + fallPerSec;
+				double fallElapse = (elapseTime / SystemInfo.getFrameSec()) * fallPerSec;
+				double nextY = chara.getY() + fallElapse;
+
+				// 速度計算
+				double velocityPerSec = G * SystemInfo.getFrameSec();
+				double velocityElapse = (elapseTime / SystemInfo.getFrameSec()) * velocityPerSec;
+				double nextVelocity = chara.getVelocity() + velocityElapse;
+
+				chara.setY(nextY);
+				chara.setVelocity(nextVelocity);
+
+				System.out.println("fall down fall height [" + fallElapse + "] speed [" + velocityElapse + "]");
+
+				height = calcHeight(chara, gobjects);
+				if (height == 0) {
+					chara.setVelocity(0);
+					chara.setJumping(false);
+				}
+			}
+
 		}
 
 		return;
@@ -74,10 +101,22 @@ public class GActionWorldLogic implements GameWorldLogic {
 	 */
 	private double calcHeight(GActionChara chara, GObjectList gobjects) {
 
+
+
+		for (GObject gobj : gobjects) {
+
+			// 衝突
+			if (chara.getX() >= gobj.getX()) {
+
+			}
+
+
+		}
+
 		double ya = chara.getY() + chara.getHeight();
 
 		// TODO 仮にウィンドウ底辺を直近オブジェクトとする
-		double yb = SystemInfo.getInstance().getWindowSize().getHeight();
+		double yb = SystemInfo.getCanvasHeight();
 
 		// 高さ計算
 		double height = yb - ya;
@@ -90,22 +129,14 @@ public class GActionWorldLogic implements GameWorldLogic {
 		return height;
 	}
 
-	/**
-	 * 自由落下距離算出
-	 * <p>
-	 * 自由落下しているときの落下距離を算出する。<br>
-	 * dh＝ 1/2 * g * t^2<br>
-	 * ※t:経過時間、dh:落下距離、g:重力加速度<br>
-	 * </p>
-	 * @param t 経過時間
-	 * @return 落下距離
-	 */
-	private double calcFreeFallHeight(double t){
 
-		// 経過時間(t)から落下距離(dh)を算出
-		// dh = 1/2 * g * t^2
-		double dh = G * Math.pow(t, 2) / 2;
+	private boolean collegion(int sx, int sy, int ex, int ey, int sx2, int sy2, int ex2, int ey2) {
 
-		return dh;
+		if (sx <= )
+
+
+
+		return false;
 	}
+
 }

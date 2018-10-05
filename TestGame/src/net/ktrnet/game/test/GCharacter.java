@@ -3,8 +3,8 @@ package net.ktrnet.game.test;
 
 import java.awt.Image;
 
+import net.ktrnet.game.base.object.GObject;
 import net.ktrnet.game.base.util.GameTime;
-import net.ktrnet.game.base.visual.GObject;
 
 public class GCharacter extends GObject {
 

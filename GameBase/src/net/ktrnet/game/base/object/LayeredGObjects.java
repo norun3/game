@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import net.ktrnet.game.base.visual.GObject;
-
 public class LayeredGObjects {
 
 	private List<GObject> gObjects = null;

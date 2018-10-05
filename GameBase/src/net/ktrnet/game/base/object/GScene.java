@@ -10,7 +10,6 @@ import net.ktrnet.game.base.visual.GBackGround;
 import net.ktrnet.game.base.visual.GDraw;
 import net.ktrnet.game.base.visual.GFrontGround;
 import net.ktrnet.game.base.visual.GMainGround;
-import net.ktrnet.game.base.visual.GObject;
 
 public class GScene implements GDraw, GUpdate {
 

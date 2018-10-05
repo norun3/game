@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import net.ktrnet.game.base.object.GObject;
 import net.ktrnet.game.base.util.SystemInfo;
 
 public class GBackGround extends GObject {
@@ -24,12 +25,12 @@ public class GBackGround extends GObject {
 
 	@Override
 	public double getWidth() {
-		return SystemInfo.getInstance().getWindowSize().getWidth();
+		return SystemInfo.getFrameWidth();
 	}
 
 	@Override
 	public double getHeight() {
-		return SystemInfo.getInstance().getWindowSize().getHeight();
+		return SystemInfo.getFrameHeight();
 	}
 
 	@Override

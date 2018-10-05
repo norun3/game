@@ -3,6 +3,7 @@ package net.ktrnet.game.base.visual;
 import java.awt.Graphics2D;
 
 import net.ktrnet.game.base.logic.GUpdate;
+import net.ktrnet.game.base.object.GObject;
 import net.ktrnet.game.base.object.LayerList;
 
 public class GObjectList extends LayerList<GObject> implements GDraw, GUpdate {

@@ -6,8 +6,8 @@ import net.ktrnet.game.action.object.GActionChara;
 import net.ktrnet.game.base.GFrame;
 import net.ktrnet.game.base.input.KeyStateManager;
 import net.ktrnet.game.base.logic.GameLogic;
+import net.ktrnet.game.base.object.GObject;
 import net.ktrnet.game.base.object.GScene;
-import net.ktrnet.game.base.visual.GObject;
 
 public class ActioonGameLogic implements GameLogic {
 
