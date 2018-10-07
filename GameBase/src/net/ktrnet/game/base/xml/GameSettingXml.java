@@ -1,7 +1,7 @@
 package net.ktrnet.game.base.xml;
 
 import java.awt.Color;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -98,7 +98,7 @@ public class GameSettingXml {
 				if (imagePath != null) {
 
 					try {
-						Image image = ResourceUtil.getImage(imagePath);
+						BufferedImage image = ResourceUtil.getImage(imagePath);
 						backGround.setImage(image);
 					} catch (IOException e) {
 						// 指定されたイメージがない場合、エラー
@@ -249,7 +249,7 @@ public class GameSettingXml {
 					"This id(" + id + ") is duplicated.");
 		}
 
-		Image image = null;
+		BufferedImage image = null;
 		try {
 			image = ResourceUtil.getImage(imagePath);
 		} catch (IOException e) {

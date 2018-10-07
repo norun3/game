@@ -2,7 +2,7 @@ package net.ktrnet.game.base.visual;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import net.ktrnet.game.base.object.GObject;
 import net.ktrnet.game.base.util.SystemInfo;
@@ -15,7 +15,7 @@ public class GBackGround extends GObject {
 		this(Color.BLACK);
 	}
 
-	public GBackGround(Image image) {
+	public GBackGround(BufferedImage image) {
 		super(BACKGROUND_ID, 0, 0, 0, 0, image);
 	}
 

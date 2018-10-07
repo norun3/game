@@ -101,18 +101,6 @@ public class GActionWorldLogic implements GameWorldLogic {
 	 */
 	private double calcHeight(GActionChara chara, GObjectList gobjects) {
 
-
-
-		for (GObject gobj : gobjects) {
-
-			// 衝突
-			if (chara.getX() >= gobj.getX()) {
-
-			}
-
-
-		}
-
 		double ya = chara.getY() + chara.getHeight();
 
 		// TODO 仮にウィンドウ底辺を直近オブジェクトとする
@@ -129,14 +117,5 @@ public class GActionWorldLogic implements GameWorldLogic {
 		return height;
 	}
 
-
-	private boolean collegion(int sx, int sy, int ex, int ey, int sx2, int sy2, int ex2, int ey2) {
-
-		if (sx <= )
-
-
-
-		return false;
-	}
 
 }

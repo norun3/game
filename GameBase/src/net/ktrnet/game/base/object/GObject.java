@@ -2,9 +2,13 @@ package net.ktrnet.game.base.object;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.image.BufferedImage;
 
 import net.ktrnet.game.base.logic.GUpdate;
+import net.ktrnet.game.base.util.CollegionUtil;
 import net.ktrnet.game.base.visual.GDraw;
 
 // TODO
@@ -16,20 +20,22 @@ public class GObject implements GDraw, GUpdate {
 	private double y = 0;
 	private double width = 0;
 	private double height = 0;
-	private Image image = null;
+	private BufferedImage image = null;
 	private Color color = null;
 	private int repeatw = 1;
 	private int repeath = 1;
+
+	private Shape shape = null;
 
 	public GObject() {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
-	public GObject(String id, int x, int y, Image image) {
+	public GObject(String id, int x, int y, BufferedImage image) {
 		this.setOriginalImage(x, y, image);
 	}
 
-	public GObject(String id, int x, int y, int width, int height, Image image) {
+	public GObject(String id, int x, int y, int width, int height, BufferedImage image) {
 		this.setScaleImage(x, y, width, height, image);
 	}
 
@@ -43,7 +49,7 @@ public class GObject implements GDraw, GUpdate {
 		this.color = color;
 	}
 
-	public GObject(String id, int x, int y, double scale, Image image) {
+	public GObject(String id, int x, int y, double scale, BufferedImage image) {
 
 		this.setId(id);
 
@@ -56,17 +62,18 @@ public class GObject implements GDraw, GUpdate {
 		this.setScaleImage(x, y, width, height, image);
 	}
 
-	public void setOriginalImage(int x, int y, Image image) {
+	public void setOriginalImage(int x, int y, BufferedImage image) {
 		this.setScaleImage(x, y, image.getWidth(null), image.getHeight(null), image);
 	}
 
-	public void setScaleImage(int x, int y, int width, int height, Image image) {
+	public void setScaleImage(int x, int y, int width, int height, BufferedImage image) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.image = image;
 		this.color = null;
+		this.shape = new Rectangle(0, 0, width, height);
 	}
 
 	public String getId() {
@@ -125,12 +132,12 @@ public class GObject implements GDraw, GUpdate {
 	}
 
 
-	public Image getImage() {
+	public BufferedImage getImage() {
 		return image;
 	}
 
 
-	public void setImage(Image image) {
+	public void setImage(BufferedImage image) {
 		this.image = image;
 	}
 
@@ -164,6 +171,10 @@ public class GObject implements GDraw, GUpdate {
 
 	public double getRepeatHeight() {
 		return this.getRepeath() * this.getHeight();
+	}
+
+	public boolean hit(GObject gobj) {
+		return CollegionUtil.hit(this.shape, gobj.shape);
 	}
 
 	@Override
@@ -222,6 +233,15 @@ public class GObject implements GDraw, GUpdate {
 	public void update() {
 		// TODO 自動生成されたメソッド・スタブ
 
+	}
+
+	private void updateClipRegion() {
+
+		if (this.image != null) {
+			System.out.println("call updateClipRegion");
+			this.image.getGraphics().setClip(
+					0, 0, (int)this.getWidth(), (int)this.getHeight());
+		}
 	}
 
 

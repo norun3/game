@@ -1,7 +1,7 @@
 package net.ktrnet.game.action.object;
 
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import net.ktrnet.game.base.object.GObject;
 import net.ktrnet.game.base.util.GameTime;
@@ -24,15 +24,15 @@ public class GActionChara extends GObject {
 		super();
 	}
 
-	public GActionChara(String id, int x, int y, double scale, Image image) {
+	public GActionChara(String id, int x, int y, double scale, BufferedImage image) {
 		super(id, x, y, scale, image);
 	}
 
-	public GActionChara(String id, int x, int y, Image image) {
+	public GActionChara(String id, int x, int y, BufferedImage image) {
 		super(id, x, y, image);
 	}
 
-	public GActionChara(String id, int x, int y, int width, int height, Image image) {
+	public GActionChara(String id, int x, int y, int width, int height, BufferedImage image) {
 		super(id, x, y, width, height, image);
 	}
 
@@ -48,6 +48,8 @@ public class GActionChara extends GObject {
 		// 初速をセット
 		// ステータスをセット
 		this.jumping = true;
+
+		System.out.println("Clip:" + this.getImage().getGraphics().getClip());
 	}
 
 	public void update() {
